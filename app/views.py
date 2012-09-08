@@ -76,11 +76,8 @@ def validate(request):
     sub, subs = get_subs(request)
     get_object_or_404(Manifest, sub=sub)
     auth = Auth(request.POST)
-    if not auth.is_valid():
-        raise ValueError('Key and secret required.')
-    if 'validate' in request.POST:
-        res = _validate(auth.cleaned_data,
-                        'http://%s.%s' % (sub, '.'.join(subs)) + reverse('manifest'))
+    res = _validate(auth.cleaned_data,
+                    'http://%s.%s' % (sub, '.'.join(subs)) + reverse('manifest'))
     return http.HttpResponse(json.dumps(res))
 
 

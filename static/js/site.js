@@ -1,8 +1,8 @@
 $(document).ready(function() {
-    $('#validate').submit(function() {
+    $('#validate').bind('submit', function() {
         $.post($('#validate').attr('action'), $('#validate').serialize(),
                 function(data) {
-                    alert(data)
+                    alert(data);
                 });
         return false;
     });
