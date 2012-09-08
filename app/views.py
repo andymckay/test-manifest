@@ -9,6 +9,7 @@ from django.views.decorators.http import require_http_methods
 
 from manifest.models import Manifest
 from marketplace.lib import validate
+from marketplace.forms import Auth
 
 default = """{
   "name":"Test App (%(sub)s)",
@@ -46,7 +47,8 @@ def home(request):
 
     return render(request, 'home.html',
                   {'sub': get_subs(request)[0],
-                   'manifest': manifest})
+                   'manifest': manifest,
+                   'auth': Auth()})
 
 
 @require_http_methods(['POST'])
@@ -70,11 +72,15 @@ def save(request):
 
 
 @require_http_methods(['POST'])
-def post(request):
+def validate(request):
     sub, subs = get_subs(request)
     get_object_or_404(Manifest, sub=sub)
+    auth = Auth(request.POST)
+    if not auth.is_valid():
+        raise ValueError('Key and secret required.')
     if 'validate' in request.POST:
-        res = validate('http://%s.%s' % (sub, '.'.join(subs)) + reverse('manifest'))
+        res = validate(auth.cleaned_data(),
+                       'http://%s.%s' % (sub, '.'.join(subs)) + reverse('manifest'))
     return http.HttpResponse(json.dumps(res))
 
 
