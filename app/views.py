@@ -46,7 +46,8 @@ def home(request):
 
     return render(request, 'home.html',
                   {'sub': get_subs(request)[0],
-                   'manifest': manifest})
+                   'manifest': manifest,
+                   'request': request})
 
 
 @require_http_methods(['POST'])
