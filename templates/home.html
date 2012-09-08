@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"
+          href="static/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css"
+          href="static/bootstrap/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css" href="static/css/site.css" />
+    <title>Test Manifest</title>
+  </head>
+  <body>
+    <header>
+      <section class="container">
+      <h2>Test Manifest</h2>
+      </section>
+    </header>
+
+    <section class="container">
+      <p>
+        <form method="post" action="{% url new %}">
+            {% csrf_token %}
+            <button class="btn btn-info">Create a test manifest</button>
+        </form>
+      </p>
+    </section>
+
+    {% if manifest %}
+    <section class="container manifest">
+      <p>
+        <form method="post" action="{% url save %}">
+          {% csrf_token %}
+          <textarea name="text">{{ manifest.text }}</textarea>
+          <button class="btn btn-info">Save</button>
+          <a href="{% url manifest %}">Link to the raw manifest</a>
+        </form>
+        <form method="post" action="{% url post %}">
+          {% csrf_token %}
+          <button class="btn btn-info" name="validate">Validate</button>
+        </form>
+      </p>
+    </section>
+    {% endif %}
+
+    <footer>
+      <section class="container">
+        <p>By <a href="http://www.agmweb.ca">Andy McKay</a> for the
+           <a href="http://marketplace.mozilla.org">Mozilla Marketplace</a>.</p>
+      </section>
+    </footer>
+
+    <a href="http://github.com/andymckay/test-manifest">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" /></a>
+
+  </body>
+</html>
+
+
+
