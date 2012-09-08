@@ -30,7 +30,7 @@ default = """{
 
 
 def get_subs(request):
-    subs = request.META['HTTP_X_FORWARDED_HOST'].split('.')
+    subs = request.META['HTTP_HOST'].split('.')
     if len(subs) > 3:
         return subs[0], subs[1:]
     return None, subs
