@@ -79,7 +79,7 @@ def validate(request):
     if not auth.is_valid():
         raise ValueError('Key and secret required.')
     if 'validate' in request.POST:
-        res = validate(auth.cleaned_data(),
+        res = validate(auth.cleaned_data,
                        'http://%s.%s' % (sub, '.'.join(subs)) + reverse('manifest'))
     return http.HttpResponse(json.dumps(res))
 
