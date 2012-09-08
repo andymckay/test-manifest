@@ -87,7 +87,8 @@ def validate(request):
 def manifest(request):
     sub, subs = get_subs(request)
     manifest = get_object_or_404(Manifest, sub=sub)
-    return http.HttpResponse(manifest.text, content_type='text/plain')
+    return http.HttpResponse(manifest.text,
+                             content_type='application/x-web-app-manifest+json')
 
 
 def robots(request):
