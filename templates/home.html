@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css"
           href="static/bootstrap/css/bootstrap-responsive.min.css" />
     <link rel="stylesheet" type="text/css" href="static/css/site.css" />
+    <script src="/static/jquery/jquery-1.7.2.min.js"></script>
     <title>Test Manifest</title>
   </head>
   <body>
@@ -34,7 +35,7 @@
           <button class="btn btn-info">Save</button>
           <a href="{% url manifest %}">Link to the raw manifest</a>
         </form>
-        <form method="post" action="{% url post %}">
+        <form method="post" action="{% url post %}" id="validate">
           {{ auth.as_p }}
           {% csrf_token %}
           <button class="btn btn-info" name="validate">Validate</button>
@@ -42,6 +43,9 @@
       </p>
     </section>
     {% endif %}
+
+    <section class="container output">
+    <section>
 
     <footer>
       <section class="container">
