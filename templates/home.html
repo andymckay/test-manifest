@@ -25,10 +25,6 @@
       </p>
     </section>
 
-    <section class="container manifest">
-      {{ auth.as_p }}
-    </section>
-
     {% if manifest %}
     <section class="container manifest">
       <p>
@@ -39,6 +35,7 @@
           <a href="{% url manifest %}">Link to the raw manifest</a>
         </form>
         <form method="post" action="{% url post %}">
+          {{ auth.as_p }}
           {% csrf_token %}
           <button class="btn btn-info" name="validate">Validate</button>
         </form>
