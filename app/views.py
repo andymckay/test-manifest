@@ -87,12 +87,12 @@ def validate(request):
     res = _validate(auth.cleaned_data,
                     'http://%s.%s' % (sub, '.'.join(subs))
                     + reverse('manifest'))
-    if len(res) == 1 and res[0]['valid']:
+    if res['valid']:
         request.session['validation'] = res['id']
     else:
         if 'validation' in request.session:
             request.session['validation']
-    return http.HttpResponse(json.dumps(res))
+    return http.HttpResponse(json.dumps([res]))
 
 
 @require_http_methods(['POST'])
