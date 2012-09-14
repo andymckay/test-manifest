@@ -1,6 +1,6 @@
-import base64
 import json
-import os
+import string
+import random
 
 from django import http
 from django.shortcuts import render, get_object_or_404
@@ -54,7 +54,7 @@ def home(request):
 @require_http_methods(['POST'])
 def new(request):
     sub, subs = get_subs(request)
-    sub = base64.urlsafe_b64encode(os.urandom(10))[:-2].lower()
+    sub = ''.join([random.choice(string.lowercase) for x in range(0, 12)])
     full = 'http://%s.%s' % (sub, '.'.join(subs))
     if not Manifest.objects.filter(sub=sub).exists():
         Manifest.objects.create(sub=sub, text=default % {'sub': sub,
