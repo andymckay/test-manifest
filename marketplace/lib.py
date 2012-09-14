@@ -55,7 +55,7 @@ def add(auth, id):
         'payment_type': 'free',
     })
     auth = sign_request('PUT', auth, url)
-    res = requests.post(url, data,
+    res = requests.put(url, data,
                         headers={
                             'content-type': 'application/json',
                             'authorization': auth})
