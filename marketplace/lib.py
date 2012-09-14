@@ -32,7 +32,7 @@ def validate(auth, url):
                         headers={
                             'content-type': 'application/json',
                             'authorization': auth})
-    return json.loads(res.text)
+    return json.loads([res.text])
 
 
 def add(auth, id):
@@ -43,4 +43,22 @@ def add(auth, id):
                         headers={
                             'content-type': 'application/json',
                             'authorization': auth})
-    return json.loads(res.text)
+    out = [res.text]
+    app = json.loads(res.text)
+
+    # Update.
+    url = get_url('app/%s' % app['id'])
+    app.update({
+        'categories': [153, 154],
+        'device_types': ['desktop'],
+        'support_email': 'support@test-manifest.herokuapp.com',
+        'payment_type': 'free',
+    })
+    auth = sign_request('PUT', auth, url)
+    res = requests.post(url, data,
+                        headers={
+                            'content-type': 'application/json',
+                            'authorization': auth})
+
+    out.append(res.text)
+    return json.loads(out)
