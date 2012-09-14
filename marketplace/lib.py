@@ -42,6 +42,7 @@ def add(auth, id):
     url = get_url('app/')
     auth_headers = sign_request('POST', auth, url)
     print '* add manifest'
+    print auth_headers
     res = requests.post(url, data,
                         headers={
                             'content-type': 'application/json',
@@ -58,13 +59,11 @@ def add(auth, id):
         'support_email': 'support@test-manifest.herokuapp.com',
         'payment_type': 'free',
     })
-    print app
-    print url
-    print auth
     auth_headers = sign_request('PUT', auth, url)
+    print auth_headers
     print '* put manifest'
     res = requests.put(url, data,
-                        headers={
+                       headers={
                             'content-type': 'application/json',
                             'authorization': auth_headers})
 
