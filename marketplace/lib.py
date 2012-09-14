@@ -40,12 +40,12 @@ def validate(auth, url):
 def add(auth, id):
     data = json.dumps({'manifest': id})
     url = get_url('app/')
-    auth = sign_request('POST', auth, url)
+    auth_headers = sign_request('POST', auth, url)
     print '* add manifest'
     res = requests.post(url, data,
                         headers={
                             'content-type': 'application/json',
-                            'authorization': auth})
+                            'authorization': auth_headers})
     print res.text
     out = [json.loads(res.text)]
     app = json.loads(res.text)
@@ -61,12 +61,12 @@ def add(auth, id):
     print app
     print url
     print auth
-    auth = sign_request('PUT', auth, url)
+    auth_headers = sign_request('PUT', auth, url)
     print '* put manifest'
     res = requests.put(url, data,
                         headers={
                             'content-type': 'application/json',
-                            'authorization': auth})
+                            'authorization': auth_headers})
 
     print res
     out.append(json.loads(res.text))
