@@ -87,7 +87,7 @@ def validate(request):
     res = _validate(auth.cleaned_data,
                     'http://%s.%s' % (sub, '.'.join(subs))
                     + reverse('manifest'))
-    if res.valid:
+    if res['valid']:
         request.session['validation'] = res['id']
     else:
         del request.session['validation']
