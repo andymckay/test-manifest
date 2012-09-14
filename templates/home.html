@@ -39,8 +39,9 @@
         <form method="post" action="{% url post %}" id="validate">
           {{ auth.as_p }}
           {% csrf_token %}
-          <button class="btn btn-info" name="validate">Validate</button>
-          <button class="btn btn-info" name="add">Add</button>
+          <button class="btn btn-info" name="validate" value="validate">Validate</button>
+          <button class="btn btn-info" name="add" value="add">Add</button>
+          <a href="https://marketplace-dev.allizom.org/developer/api">Get your API key here</a>
         </form>
       </p>
     </section>
