@@ -62,7 +62,7 @@ def add(auth, id):
     auth_headers = sign_request('PUT', auth, url)
     print auth_headers
     print '* put manifest'
-    res = requests.put(url, data,
+    res = requests.put(url, json.dumps(app),
                        headers={
                             'content-type': 'application/json',
                             'authorization': auth_headers})
