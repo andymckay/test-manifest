@@ -33,3 +33,14 @@ def validate(auth, url):
                             'content-type': 'application/json',
                             'authorization': auth})
     return json.loads(res.text)
+
+
+def add(auth, id):
+    data = json.dumps({'manifest': id})
+    url = get_url('add/')
+    auth = sign_request('POST', auth, url)
+    res = requests.post(url, data,
+                        headers={
+                            'content-type': 'application/json',
+                            'authorization': auth})
+    return json.loads(res.text)

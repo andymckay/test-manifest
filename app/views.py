@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.views.decorators.http import require_http_methods
 
 from manifest.models import Manifest
-from marketplace.lib import validate as _validate
+from marketplace.lib import add as _add, validate as _validate
 from marketplace.forms import Auth
 
 default = """{
@@ -79,8 +79,20 @@ def validate(request):
     if not auth.is_valid():
         raise ValueError('Key and secret required.')
 
-    res = _validate(auth.cleaned_data,
-                    'http://%s.%s' % (sub, '.'.join(subs)) + reverse('manifest'))
+    if 'validate' in request.POST:
+        res = _validate(auth.cleaned_data,
+                        'http://%s.%s' % (sub, '.'.join(subs))
+                        + reverse('manifest'))
+        if res.valid:
+            request.session['validation'] = res['id']
+        else:
+            del request.session['validation']
+
+    if 'add' in request.POST:
+        if 'validation' not in request.session:
+            raise ValueError('Not got a valid validation id.')
+        res = _add(auth.cleaned_data, request.session['validation'])
+
     return http.HttpResponse(json.dumps(res))
 
 

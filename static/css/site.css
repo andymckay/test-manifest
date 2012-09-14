@@ -38,12 +38,7 @@ footer {
     width: 100%;
 }
 
-pre {
-    padding-top: 2em;
-}
-
 .output pre {
-    padding: 1em;
     border: 1px solid block;
     margin: 1em;
     background-color: white;
