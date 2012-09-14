@@ -37,7 +37,7 @@ def validate(auth, url):
 
 def add(auth, id):
     data = json.dumps({'manifest': id})
-    url = get_url('add/')
+    url = get_url('app/')
     auth = sign_request('POST', auth, url)
     res = requests.post(url, data,
                         headers={

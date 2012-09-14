@@ -90,7 +90,8 @@ def validate(request):
     if res['valid']:
         request.session['validation'] = res['id']
     else:
-        del request.session['validation']
+        if 'validation' in request.session:
+            request.session['validation']
     return http.HttpResponse(json.dumps(res))
 
 
