@@ -71,28 +71,36 @@ def save(request):
     return http.HttpResponseRedirect(reverse('home'))
 
 
-@require_http_methods(['POST'])
-def validate(request):
+def preprocess(request):
     sub, subs = get_subs(request)
     get_object_or_404(Manifest, sub=sub)
     auth = Auth(request.POST)
     if not auth.is_valid():
         raise ValueError('Key and secret required.')
 
-    if 'validate' in request.POST:
-        res = _validate(auth.cleaned_data,
-                        'http://%s.%s' % (sub, '.'.join(subs))
-                        + reverse('manifest'))
-        if res.valid:
-            request.session['validation'] = res['id']
-        else:
-            del request.session['validation']
+    return sub, subs, auth
 
-    if 'add' in request.POST:
-        if 'validation' not in request.session:
-            raise ValueError('Not got a valid validation id.')
-        res = _add(auth.cleaned_data, request.session['validation'])
 
+@require_http_methods(['POST'])
+def validate(request):
+    sub, subs, auth = preprocess(request)
+    res = _validate(auth.cleaned_data,
+                    'http://%s.%s' % (sub, '.'.join(subs))
+                    + reverse('manifest'))
+    if res.valid:
+        request.session['validation'] = res['id']
+    else:
+        del request.session['validation']
+    return http.HttpResponse(json.dumps(res))
+
+
+@require_http_methods(['POST'])
+def add(request):
+    sub, subs, auth = preprocess(request)
+    if 'validation' not in request.session:
+        raise ValueError('Not got a valid validation id.')
+
+    res = _add(auth.cleaned_data, request.session['validation'])
     return http.HttpResponse(json.dumps(res))
 
 
