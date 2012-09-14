@@ -33,7 +33,7 @@ def validate(auth, url):
                         headers={
                             'content-type': 'application/json',
                             'authorization': auth})
-    print res
+    print res.text
     return json.loads(res.text)
 
 
@@ -46,7 +46,7 @@ def add(auth, id):
                         headers={
                             'content-type': 'application/json',
                             'authorization': auth})
-    print res
+    print res.text
     out = [json.loads(res.text)]
     app = json.loads(res.text)
 
@@ -58,6 +58,9 @@ def add(auth, id):
         'support_email': 'support@test-manifest.herokuapp.com',
         'payment_type': 'free',
     })
+    print app
+    print url
+    print auth
     auth = sign_request('PUT', auth, url)
     print '* put manifest'
     res = requests.put(url, data,

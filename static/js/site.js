@@ -4,9 +4,7 @@ $(document).ready(function() {
         var $form = $elem.closest('form');
         $.post($elem.attr('data-dest'), $form.serialize(),
                 function(data) {
-                    jQuery.each(data, function(index, value) {
-                        $('section.output').append('<pre>' + value + '</pre>');
-                    });
+                    $('section.output').append('<pre>' + data + '</pre>');
                 });
         return false;
     });
