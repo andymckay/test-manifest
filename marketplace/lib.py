@@ -32,7 +32,7 @@ def validate(auth, url):
                         headers={
                             'content-type': 'application/json',
                             'authorization': auth})
-    return json.loads([res.text])
+    return json.loads(u'[%s]' % res.text)
 
 
 def add(auth, id):
@@ -43,7 +43,7 @@ def add(auth, id):
                         headers={
                             'content-type': 'application/json',
                             'authorization': auth})
-    out = [res.text]
+    out = u'[%s]' % res.text
     app = json.loads(res.text)
 
     # Update.
@@ -60,5 +60,5 @@ def add(auth, id):
                             'content-type': 'application/json',
                             'authorization': auth})
 
-    out.append(res.text)
+    out += u'[%s]' % res.text
     return json.loads(out)
