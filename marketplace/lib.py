@@ -33,21 +33,18 @@ def validate(auth, url):
     data = json.dumps({'manifest': url})
     url = get_url('validation/')
     auth = sign_request('POST', auth, url)
-    print '* validate manifest'
     res = requests.post(url, data,
                         headers={
                             'content-type': 'application/json',
                             'authorization': auth})
-    print res.text
     return json.loads(res.text)
 
 
 def add(auth, id):
+    # Push app.
     data = json.dumps({'manifest': id})
     url = get_url('app/')
     auth_headers = sign_request('POST', auth, url)
-    print '* add manifest'
-    print auth_headers
     res = requests.post(url, data,
                         headers={
                             'content-type': 'application/json',
@@ -58,7 +55,7 @@ def add(auth, id):
     # Update.
     url = get_url('app/%s/' % app['id'])
     app.update({
-        'categories': [3, 4],
+        'categories': [153, 154],
         'device_types': ['desktop'],
         'support_email': 'support@test-manifest.herokuapp.com',
         'payment_type': 'free',
