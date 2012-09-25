@@ -83,12 +83,10 @@ def preprocess(request):
 
 @require_http_methods(['POST'])
 def validate(request):
-    print '* validate'
     sub, subs, auth = preprocess(request)
     res = _validate(auth.cleaned_data,
                     'http://%s.%s' % (sub, '.'.join(subs))
                     + reverse('manifest'))
-    print res
     if res['valid']:
         request.session['validation'] = res['id']
     else:
@@ -99,13 +97,11 @@ def validate(request):
 
 @require_http_methods(['POST'])
 def add(request):
-    print '* add'
     sub, subs, auth = preprocess(request)
     if 'validation' not in request.session:
         raise ValueError('Not got a valid validation id.')
 
     res = _add(auth.cleaned_data, request.session['validation'])
-    print res
     return http.HttpResponse(json.dumps(res))
 
 

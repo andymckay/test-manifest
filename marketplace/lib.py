@@ -1,10 +1,15 @@
+import base64
 import json
+import os
 import time
 
 from django.conf import settings
 
 import oauth2 as oauth
 import requests
+
+sample = os.path.join(os.path.dirname(__file__),
+                      '../static/img/screenshot.png')
 
 
 def get_url(url):
@@ -47,26 +52,49 @@ def add(auth, id):
                         headers={
                             'content-type': 'application/json',
                             'authorization': auth_headers})
-    print res.text
     out = [json.loads(res.text)]
     app = json.loads(res.text)
 
     # Update.
-    url = get_url('app/%s' % app['id'])
+    url = get_url('app/%s/' % app['id'])
     app.update({
-        'categories': [153, 154],
+        'categories': [3, 4],
         'device_types': ['desktop'],
         'support_email': 'support@test-manifest.herokuapp.com',
         'payment_type': 'free',
+        'privacy_policy': 'yes'
     })
     auth_headers = sign_request('PUT', auth, url)
-    print auth_headers
-    print '* put manifest'
     res = requests.put(url, json.dumps(app),
                        headers={
                             'content-type': 'application/json',
                             'authorization': auth_headers})
 
-    print res
     out.append(json.loads(res.text))
+
+    # Add screenshot.
+    url = get_url('preview/?app=%s' % app['id'])
+    auth_headers = sign_request('POST', auth, url)
+    data = {
+        'position': 1,
+        'file': {'type': 'image/png',
+                 'data': base64.b64encode(open(sample, 'r').read())}}
+    res = requests.post(url, json.dumps(data),
+                       headers={
+                            'content-type': 'application/json',
+                            'authorization': auth_headers})
+
+    out.append(json.loads(res.text))
+
+    # Add to pending queue.
+    url = get_url('status/%s/' % app['id'])
+    auth_headers = sign_request('PATCH', auth, url)
+    data = {'status': 'pending'}
+    res = requests.patch(url, json.dumps(data),
+                       headers={
+                            'content-type': 'application/json',
+                            'authorization': auth_headers})
+
+    if res.text:
+        out.append(json.loads(res.text))
     return out
