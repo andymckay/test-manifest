@@ -11,8 +11,10 @@ $(document).ready(function() {
         $('#auth').addClass('hidden');
     }
 
-    if (window.localStorage.getItem('key-secret')) {
-        var vals = window.localStorage.getItem('key-secret').split('|');
+    var storage = window.globalStorage['test-manifest.herokuapp.com'];
+
+    if (storage.getItem('key-secret')) {
+        var vals = storage.getItem('key-secret').split('|');
         $('input#id_key')[0].value = vals[0];
         $('input#id_secret')[0].value = vals[1];
         auth_hide();
@@ -23,7 +25,7 @@ $(document).ready(function() {
         var $form = $elem.closest('form');
         var $target = $('section.output');
         if ($('input#id_key')[0].value && $('input#id_secret')[0].value) {
-            window.localStorage.setItem('key-secret',
+            storage.setItem('key-secret',
                     $('input#id_key')[0].value + '|' +
                     $('input#id_secret')[0].value);
             auth_hide();
