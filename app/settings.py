@@ -133,3 +133,4 @@ DATABASES = {'default': dj_database_url.config(
         default='postgres://localhost/test-manifest')}
 
 MARKETPLACE = 'https://marketplace-dev.allizom.org/api/apps/'
+#MARKETPLACE = 'http://addons.mozilla.dev/api/apps/'

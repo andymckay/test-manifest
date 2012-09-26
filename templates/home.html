@@ -37,11 +37,15 @@
           <a href="{% url manifest %}">Link to the raw manifest</a>
         </form>
         <form method="post">
-          {{ auth.as_p }}
+          <p id="auth-get"><a href="https://marketplace-dev.allizom.org/developers/api">Get your API key here</a></p>
+          <div id="auth">
+            {{ auth.as_p }}
+          </div>
           {% csrf_token %}
           <button class="btn btn-info action" data-dest="{% url validate %}" value="validate">Validate</button>
           <button class="btn btn-info action" data-dest="{% url add %}" value="add">Add</button>
-          <a href="https://marketplace-dev.allizom.org/developers/api">Get your API key here</a>
+          <span id="auth-show" class="hidden"><a id="show" href="#show">Show auth</a> &middot;</span>
+          <a id="clear" href="#clear">Clear output</a>
         </form>
       </p>
     </section>

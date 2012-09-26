@@ -29,69 +29,79 @@ def sign_request(method, auth, url):
     return req.to_header()['Authorization']
 
 
+def get_headers(auth):
+    return {
+        'content-type': 'application/json',
+        'authorization': auth
+    }
+
+
 def validate(auth, url):
     data = json.dumps({'manifest': url})
     url = get_url('validation/')
     auth = sign_request('POST', auth, url)
-    res = requests.post(url, data,
-                        headers={
-                            'content-type': 'application/json',
-                            'authorization': auth})
-    return json.loads(res.text)
+    return call(requests.post, url, data, get_headers(auth))[0]
+
+
+def call(method, url, data, headers):
+    result = {'action': method.__name__.upper(),
+              'url': url}
+    res = method(url, data, headers=headers)
+
+    error = res.status_code >= 300
+    result.update({
+        'status': res.status_code,
+        'result': json.loads(res.text) if res.text else '',
+        'error': error
+        })
+    return result, error
 
 
 def add(auth, id):
     # Push app.
     data = json.dumps({'manifest': id})
     url = get_url('app/')
-    auth_headers = sign_request('POST', auth, url)
-    res = requests.post(url, data,
-                        headers={
-                            'content-type': 'application/json',
-                            'authorization': auth_headers})
-    out = [json.loads(res.text)]
-    app = json.loads(res.text)
+    auth_ = sign_request('POST', auth, url)
+    result, error = call(requests.post, url, data, get_headers(auth_))
+    app = result['result']
+    out = [result,]
+    if error:
+        return out
 
     # Update.
     url = get_url('app/%s/' % app['id'])
     app.update({
-        'categories': [153, 154],
+        'categories': [3, 4], #[153, 154],
         'device_types': ['desktop'],
         'support_email': 'support@test-manifest.herokuapp.com',
         'payment_type': 'free',
         'privacy_policy': 'yes'
     })
-    auth_headers = sign_request('PUT', auth, url)
-    res = requests.put(url, json.dumps(app),
-                       headers={
-                            'content-type': 'application/json',
-                            'authorization': auth_headers})
-
-    out.append(json.loads(res.text))
+    auth_ = sign_request('PUT', auth, url)
+    result, error = call(requests.put, url, json.dumps(app),
+                         get_headers(auth_))
+    out.append(result)
+    if error:
+        return out
 
     # Add screenshot.
     url = get_url('preview/?app=%s' % app['id'])
-    auth_headers = sign_request('POST', auth, url)
+    auth_ = sign_request('POST', auth, url)
     data = {
         'position': 1,
         'file': {'type': 'image/png',
                  'data': base64.b64encode(open(sample, 'r').read())}}
-    res = requests.post(url, json.dumps(data),
-                       headers={
-                            'content-type': 'application/json',
-                            'authorization': auth_headers})
-
-    out.append(json.loads(res.text))
+    result, error = call(requests.post, url, json.dumps(data),
+                         get_headers(auth_))
+    out.append(result)
+    if error:
+        return out
 
     # Add to pending queue.
     url = get_url('status/%s/' % app['id'])
-    auth_headers = sign_request('PATCH', auth, url)
+    auth_ = sign_request('PATCH', auth, url)
     data = {'status': 'pending'}
-    res = requests.patch(url, json.dumps(data),
-                       headers={
-                            'content-type': 'application/json',
-                            'authorization': auth_headers})
-
-    if res.text:
-        out.append(json.loads(res.text))
+    result, error = call(requests.patch, url, json.dumps(data),
+                         get_headers(auth_))
+    out.append(result)
     return out

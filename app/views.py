@@ -31,6 +31,7 @@ default = """{
 
 
 def get_subs(request):
+    #return 'ftzzaxdkskmi', ['localhost']
     subs = request.META['HTTP_HOST'].split('.')
     if len(subs) > 3:
         return subs[0], subs[1:]
@@ -85,10 +86,11 @@ def preprocess(request):
 def validate(request):
     sub, subs, auth = preprocess(request)
     res = _validate(auth.cleaned_data,
+                    #'http://localhost:9000/manifest.webapp')
                     'http://%s.%s' % (sub, '.'.join(subs))
                     + reverse('manifest'))
-    if res['valid']:
-        request.session['validation'] = res['id']
+    if res['result'].get('valid'):
+        request.session['validation'] = res['result']['id']
     else:
         if 'validation' in request.session:
             del request.session['validation']
