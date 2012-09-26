@@ -91,5 +91,5 @@ def add(auth, id):
 
     out.append(json.loads({'action': 'PATCH',
                            'url': url,
-                           'result': res.text))
+                           'result': res.text}))
     return out
