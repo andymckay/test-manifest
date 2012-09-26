@@ -29,31 +29,27 @@ def sign_request(method, auth, url):
     return req.to_header()['Authorization']
 
 
-def get_headers(auth):
-    return {
-        'content-type': 'application/json',
-        'authorization': auth
-    }
-
 def validate(auth, url):
     data = json.dumps({'manifest': url})
     url = get_url('validation/')
     auth = sign_request('POST', auth, url)
-    res = requests.post(url, data, headers=get_headers(auth))
-    return json.loads({'action': 'POST',
-                       'url': url,
-                       'result': res.text})
+    res = requests.post(url, data,
+                        headers={
+                            'content-type': 'application/json',
+                            'authorization': auth})
+    return json.loads(res.text)
 
 
 def add(auth, id):
     # Push app.
     data = json.dumps({'manifest': id})
     url = get_url('app/')
-    auth_ = sign_request('POST', auth, url)
-    res = requests.post(url, data, headers=get_headers(auth_))
-    out = [json.loads({'action': 'POST',
-                       'url': url,
-                       'result': json.loads(res.text)})]
+    auth_headers = sign_request('POST', auth, url)
+    res = requests.post(url, data,
+                        headers={
+                            'content-type': 'application/json',
+                            'authorization': auth_headers})
+    out = [json.loads(res.text)]
     app = json.loads(res.text)
 
     # Update.
@@ -65,31 +61,37 @@ def add(auth, id):
         'payment_type': 'free',
         'privacy_policy': 'yes'
     })
-    auth_ = sign_request('PUT', auth, url)
-    res = requests.put(url, json.dumps(app), headers=get_headers(auth_))
-    out.append(json.loads({'action': 'PUT',
-                           'url': url,
-                           'result': res.text}))
+    auth_headers = sign_request('PUT', auth, url)
+    res = requests.put(url, json.dumps(app),
+                       headers={
+                            'content-type': 'application/json',
+                            'authorization': auth_headers})
+
+    out.append(json.loads(res.text))
 
     # Add screenshot.
     url = get_url('preview/?app=%s' % app['id'])
-    auth_ = sign_request('POST', auth, url)
+    auth_headers = sign_request('POST', auth, url)
     data = {
         'position': 1,
         'file': {'type': 'image/png',
                  'data': base64.b64encode(open(sample, 'r').read())}}
-    res = requests.post(url, json.dumps(data), headers=get_headers(auth_))
-    out.append(json.loads({'action': 'POST',
-                           'url': url,
-                           'result': res.text}))
+    res = requests.post(url, json.dumps(data),
+                       headers={
+                            'content-type': 'application/json',
+                            'authorization': auth_headers})
+
+    out.append(json.loads(res.text))
 
     # Add to pending queue.
     url = get_url('status/%s/' % app['id'])
-    auth_ = sign_request('PATCH', auth, url)
+    auth_headers = sign_request('PATCH', auth, url)
     data = {'status': 'pending'}
-    res = requests.patch(url, json.dumps(data), headers=get_headers(auth_))
+    res = requests.patch(url, json.dumps(data),
+                       headers={
+                            'content-type': 'application/json',
+                            'authorization': auth_headers})
 
-    out.append(json.loads({'action': 'PATCH',
-                           'url': url,
-                           'result': res.text))
+    if res.text:
+        out.append(json.loads(res.text))
     return out
