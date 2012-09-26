@@ -71,7 +71,7 @@ def add(auth, id):
     # Update.
     url = get_url('app/%s/' % app['id'])
     app.update({
-        'categories': [3, 4], #[153, 154],
+        'categories': [153, 154],
         'device_types': ['desktop'],
         'support_email': 'support@test-manifest.herokuapp.com',
         'payment_type': 'free',
