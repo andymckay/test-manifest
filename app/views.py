@@ -16,9 +16,9 @@ default = """{
   "description":"Test manifest",
   "version":"1.0",
   "icons":{
-    "16":"%(full)s/icon-16.png",
-    "48":"%(full)s/icon-48.png",
-    "128":"%(full)s/icon-128.png"
+    "16":"%(full)s/static/img/icon-16.png",
+    "48":"%(full)s/static/img/icon-48.png",
+    "128":"%(full)s/static/img/icon-128.png"
   },
   "installs_allowed_from":[
     "*"
