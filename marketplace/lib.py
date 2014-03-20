@@ -85,7 +85,7 @@ def add(auth, id):
         return out
 
     # Add screenshot.
-    url = get_url('preview/?app=%s' % app['id'])
+    url = get_url('app/%s/preview/' % app['id'])
     auth_ = sign_request('POST', auth, url)
     data = {
         'position': 1,
